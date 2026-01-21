@@ -3,134 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Web Client | GitHub Pages</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.discordapp.com https://discord.com https://cdnjs.cloudflare.com;">
+    <title>Discord Web | Лёгкий клиент</title>
+    
+    <!-- Предзагрузка критических ресурсов -->
+    <link rel="preconnect" href="https://discord.com">
+    <link rel="dns-prefetch" href="https://cdn.discordapp.com">
+    
+    <!-- Минимальные стили в head для мгновенной загрузки -->
+    <style>
+        /* Критические стили (1.5KB) */
+        :root {
+            --primary: #5865f2;
+            --bg-primary: #36393f;
+            --bg-secondary: #2f3136;
+            --text-normal: #dcddde;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-normal);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .loader {
+            text-align: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .discord-logo {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .progress-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            animation: loading 2s ease-in-out infinite;
+        }
+        
+        @keyframes loading {
+            0% { width: 0%; transform: translateX(-100%); }
+            50% { width: 100%; transform: translateX(0%); }
+            100% { width: 0%; transform: translateX(100%); }
+        }
+        
+        .hidden {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+    </style>
 </head>
 <body>
-    <!-- Экран загрузки -->
+    <!-- Минимальный экран загрузки -->
     <div id="loading" class="loading-screen">
         <div class="loader">
-            <div class="discord-logo">
-                <i class="fab fa-discord"></i>
+            <div class="discord-logo">Discord</div>
+            <div class="progress-bar">
+                <div class="progress"></div>
             </div>
-            <p>Загрузка Discord клиента...</p>
+            <p style="margin-top: 10px; color: #888; font-size: 14px;">Загрузка клиента...</p>
         </div>
     </div>
 
-    <!-- Основной интерфейс (скрыт до загрузки) -->
-    <div id="app" class="app-container hidden">
-        <!-- Боковая панель серверов -->
-        <div class="servers-sidebar">
-            <div class="server-list" id="serverList">
-                <!-- Серверы загружаются здесь -->
-            </div>
-            <div class="user-panel">
-                <div class="user-avatar" id="userAvatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="user-info">
-                    <span id="username">Загрузка...</span>
-                    <span class="user-status" id="userStatus">#0000</span>
-                </div>
-                <button class="settings-btn" onclick="openSettings()">
-                    <i class="fas fa-cog"></i>
-                </button>
-            </div>
-        </div>
+    <!-- Приложение загружается динамически -->
+    <div id="app"></div>
 
-        <!-- Панель каналов -->
-        <div class="channels-sidebar">
-            <div class="guild-header" id="guildHeader">
-                <h3>Выберите сервер</h3>
-            </div>
-            <div class="channel-list" id="channelList">
-                <!-- Каналы загружаются здесь -->
-            </div>
-        </div>
-
-        <!-- Основное окно чата -->
-        <div class="chat-container">
-            <!-- Заголовок канала -->
-            <div class="chat-header" id="chatHeader">
-                <div class="channel-info">
-                    <i class="fas fa-hashtag"></i>
-                    <span>Выберите канал</span>
-                </div>
-            </div>
-
-            <!-- Сообщения -->
-            <div class="messages-container" id="messagesContainer">
-                <div class="welcome-message">
-                    <h1>Добро пожаловать!</h1>
-                    <p>Выберите канал для начала общения</p>
-                </div>
-            </div>
-
-            <!-- Поле ввода -->
-            <div class="message-input-container">
-                <div class="input-wrapper">
-                    <input 
-                        type="text" 
-                        id="messageInput" 
-                        placeholder="Написать сообщение в #general" 
-                        disabled
-                    >
-                    <div class="input-actions">
-                        <button class="action-btn" title="Прикрепить файл">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                        <button class="action-btn" title="Эмодзи">
-                            <i class="far fa-smile"></i>
-                        </button>
-                        <button class="send-btn" id="sendBtn" disabled>
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Панель участников (опционально) -->
-        <div class="members-sidebar">
-            <h4>Участники</h4>
-            <div class="members-list" id="membersList">
-                <!-- Участники загружаются здесь -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Модальное окно настроек -->
-    <div id="settingsModal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Настройки</h2>
-                <button class="close-btn" onclick="closeSettings()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="setting-item">
-                    <h4>Тема</h4>
-                    <select id="themeSelect">
-                        <option value="dark">Темная</option>
-                        <option value="light">Светлая</option>
-                        <option value="amoled">AMOLED</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <h4>Уведомления</h4>
-                    <label>
-                        <input type="checkbox" id="notificationsToggle" checked>
-                        Включить уведомления
-                    </label>
-                </div>
-                <button class="logout-btn" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Выйти
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+    <!-- Основной скрипт с defer -->
+    <script src="app.js" defer></script>
+    
+    <!-- Инициализация сразу после загрузки DOM -->
+    <script>
+        // Минимальная проверка авторизации
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('discord_token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Быстрая проверка токена
+            fetch('https://discord.com/api/v10/users/@me', {
+                headers: { 'Authorization': token }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Invalid token');
+                console.log('Токен валиден, загружаем приложение...');
+            })
+            .catch(error => {
+                console.error('Ошибка токена:', error);
+                localStorage.removeItem('discord_token');
+                window.location.href = 'login.html';
+            });
+        });
+    </script>
 </body>
 </html>

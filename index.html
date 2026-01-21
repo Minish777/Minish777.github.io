@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Web Client | GitHub Pages</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico">
+</head>
+<body>
+    <!-- Экран загрузки -->
+    <div id="loading" class="loading-screen">
+        <div class="loader">
+            <div class="discord-logo">
+                <i class="fab fa-discord"></i>
+            </div>
+            <p>Загрузка Discord клиента...</p>
+        </div>
+    </div>
+
+    <!-- Основной интерфейс (скрыт до загрузки) -->
+    <div id="app" class="app-container hidden">
+        <!-- Боковая панель серверов -->
+        <div class="servers-sidebar">
+            <div class="server-list" id="serverList">
+                <!-- Серверы загружаются здесь -->
+            </div>
+            <div class="user-panel">
+                <div class="user-avatar" id="userAvatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <span id="username">Загрузка...</span>
+                    <span class="user-status" id="userStatus">#0000</span>
+                </div>
+                <button class="settings-btn" onclick="openSettings()">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Панель каналов -->
+        <div class="channels-sidebar">
+            <div class="guild-header" id="guildHeader">
+                <h3>Выберите сервер</h3>
+            </div>
+            <div class="channel-list" id="channelList">
+                <!-- Каналы загружаются здесь -->
+            </div>
+        </div>
+
+        <!-- Основное окно чата -->
+        <div class="chat-container">
+            <!-- Заголовок канала -->
+            <div class="chat-header" id="chatHeader">
+                <div class="channel-info">
+                    <i class="fas fa-hashtag"></i>
+                    <span>Выберите канал</span>
+                </div>
+            </div>
+
+            <!-- Сообщения -->
+            <div class="messages-container" id="messagesContainer">
+                <div class="welcome-message">
+                    <h1>Добро пожаловать!</h1>
+                    <p>Выберите канал для начала общения</p>
+                </div>
+            </div>
+
+            <!-- Поле ввода -->
+            <div class="message-input-container">
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        placeholder="Написать сообщение в #general" 
+                        disabled
+                    >
+                    <div class="input-actions">
+                        <button class="action-btn" title="Прикрепить файл">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="action-btn" title="Эмодзи">
+                            <i class="far fa-smile"></i>
+                        </button>
+                        <button class="send-btn" id="sendBtn" disabled>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Панель участников (опционально) -->
+        <div class="members-sidebar">
+            <h4>Участники</h4>
+            <div class="members-list" id="membersList">
+                <!-- Участники загружаются здесь -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно настроек -->
+    <div id="settingsModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Настройки</h2>
+                <button class="close-btn" onclick="closeSettings()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <h4>Тема</h4>
+                    <select id="themeSelect">
+                        <option value="dark">Темная</option>
+                        <option value="light">Светлая</option>
+                        <option value="amoled">AMOLED</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <h4>Уведомления</h4>
+                    <label>
+                        <input type="checkbox" id="notificationsToggle" checked>
+                        Включить уведомления
+                    </label>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Выйти
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

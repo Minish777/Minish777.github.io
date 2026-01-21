@@ -119,4 +119,114 @@
             background: #333;
             color: #00ff9d;
             padding: 2px 6px;
-            border
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        
+        .github-info {
+            text-align: center;
+            margin-top: 20px;
+            color: white;
+        }
+        
+        .github-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Discord Web</h1>
+            <p>Лёгкий клиент для общения</p>
+        </div>
+        
+        <div class="login-body">
+            <div class="warning">
+                ⚠️ Внимание: Это неофициальный клиент. Используйте на свой риск.
+            </div>
+            
+            <div class="input-group">
+                <label for="token">Токен Discord:</label>
+                <input 
+                    type="password" 
+                    id="token" 
+                    class="token-input" 
+                    placeholder="Введите ваш токен..."
+                    spellcheck="false"
+                >
+            </div>
+            
+            <button class="login-button" onclick="login()">Войти</button>
+            
+            <div class="token-help">
+                <details>
+                    <summary>Как получить токен?</summary>
+                    <ol>
+                        <li>Откройте Discord в браузере</li>
+                        <li>Нажмите F12 → Console</li>
+                        <li>Введите: <code>window.localStorage.token</code></li>
+                        <li>Скопируйте значение между кавычками</li>
+                    </ol>
+                    <p style="color: #dc3545; margin-top: 8px; font-size: 12px;">
+                        ⚠️ Никому не передавайте этот токен!
+                    </p>
+                </details>
+            </div>
+        </div>
+    </div>
+    
+    <div class="github-info">
+        <a href="https://github.com" target="_blank" class="github-link">
+            Размещено на GitHub Pages
+        </a>
+    </div>
+    
+    <script>
+        function login() {
+            const tokenInput = document.getElementById('token');
+            const token = tokenInput.value.trim();
+            
+            if (!token) {
+                alert('Введите токен');
+                return;
+            }
+            
+            // Быстрая проверка токена
+            fetch('https://discord.com/api/v10/users/@me', {
+                headers: { 'Authorization': token }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Invalid token');
+                return response.json();
+            })
+            .then(user => {
+                localStorage.setItem('discord_token', token);
+                localStorage.setItem('discord_user', JSON.stringify(user));
+                window.location.href = 'index.html';
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Неверный токен. Проверьте правильность ввода.');
+            });
+        }
+        
+        // Вход по Enter
+        document.getElementById('token').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') login();
+        });
+    </script>
+</body>
+</html>

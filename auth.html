@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация | Discord Web Client</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="discord-logo-large">
+                    <i class="fab fa-discord"></i>
+                </div>
+                <h1>Добро пожаловать!</h1>
+                <p>Войдите, чтобы использовать Discord клиент</p>
+            </div>
+
+            <div class="auth-methods">
+                <!-- Метод 1: OAuth2 (рекомендуется) -->
+                <div class="auth-method">
+                    <h3>Безопасный вход</h3>
+                    <p>Используйте официальный Discord OAuth</p>
+                    <button class="auth-btn discord-btn" onclick="startOAuth()">
+                        <i class="fab fa-discord"></i> Войти через Discord
+                    </button>
+                </div>
+
+                <!-- Метод 2: Токен (только для разработки) -->
+                <div class="auth-method">
+                    <h3>Для разработки</h3>
+                    <p class="warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Только для тестирования! Не используйте основной аккаунт.
+                    </p>
+                    <div class="token-input-group">
+                        <input 
+                            type="password" 
+                            id="tokenInput" 
+                            placeholder="Введите токен пользователя"
+                            spellcheck="false"
+                        >
+                        <button class="token-btn" onclick="loginWithToken()">
+                            <i class="fas fa-key"></i> Войти
+                        </button>
+                    </div>
+                    <div class="token-help">
+                        <details>
+                            <summary>Как получить токен?</summary>
+                            <ol>
+                                <li>Откройте Discord в браузере</li>
+                                <li>Нажмите F12 → Console</li>
+                                <li>Введите: 
+                                    <code>localStorage.token</code>
+                                </li>
+                                <li>Скопируйте значение в кавычках</li>
+                            </ol>
+                            <p class="warning-small">
+                                Никому не передавайте этот токен!
+                            </p>
+                        </details>
+                    </div>
+                </div>
+            </div>
+
+            <div class="auth-footer">
+                <p>Это неофициальный клиент. Используйте на свой риск.</p>
+                <p class="small">
+                    <a href="https://discord.com/terms" target="_blank">Условия использования</a> | 
+                    <a href="https://discord.com/privacy" target="_blank">Конфиденциальность</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="github-info">
+            <p>
+                <i class="fab fa-github"></i>
+                Проект размещен на GitHub Pages
+            </p>
+            <a href="https://github.com/ваш-юзернейм/discord-web-client" 
+               target="_blank" 
+               class="github-link">
+                Исходный код
+            </a>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+</html>
